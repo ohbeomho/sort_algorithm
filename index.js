@@ -31,6 +31,7 @@ algorithmSelect.addEventListener(
 
 let step = 0;
 let playing = false;
+let end = false;
 
 function generateBars() {
   if (bars.length) {
@@ -91,6 +92,11 @@ function shuffle() {
 }
 
 function play() {
+  if (end) {
+    end = false;
+    shuffle();
+  }
+
   elementsInput.disabled = true;
   speedInput.disabled = true;
   algorithmSelect.disabled = true;
@@ -187,6 +193,7 @@ async function sort() {
   }
 
   stop();
+  end = true;
 }
 
 function delay() {
