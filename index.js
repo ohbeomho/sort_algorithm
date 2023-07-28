@@ -11,9 +11,9 @@ const numbers = [];
 const bars = [];
 
 elementsInput.addEventListener("change", () => {
-  if (elementsInput.valueAsNumber > 2048) {
-    elements = 2048;
-    elementsInput.value = "2048";
+  if (elementsInput.valueAsNumber > 200) {
+    elements = 200;
+    elementsInput.value = "200";
   } else elements = elementsInput.valueAsNumber;
 
   shuffle();
