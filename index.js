@@ -31,7 +31,6 @@ algorithmSelect.addEventListener(
 
 let step = 0;
 let playing = false;
-let end = false;
 
 function generateBars() {
   if (bars.length) {
@@ -63,6 +62,14 @@ function generateNumbers() {
   }
 }
 
+function highlightBar(i) {
+  bars[i].classList.add("highlight");
+}
+
+function removeHighlight() {
+  bars.forEach((bar) => bar.classList.contains("highlight") && bar.classList.remove("highlight"));
+}
+
 function makeButton(type) {
   const button = document.createElement("button");
   button.innerText = type.charAt(0).toUpperCase() + type.substring(1);
@@ -92,8 +99,8 @@ function shuffle() {
 }
 
 function play() {
-  if (end) {
-    end = false;
+  if (step) {
+    step = 0;
     shuffle();
   }
 
@@ -162,12 +169,12 @@ async function sort() {
           numbers[j] = temp;
 
           generateBars();
-
+          highlightBar(j);
           await delay();
         }
       }
     }
-  } else {
+  } else if (algorithm === "bubble") {
     for (let i = 0; i < elements; i++) {
       for (let j = 0; j < elements - i - 1; j++) {
         if (s) {
@@ -185,15 +192,48 @@ async function sort() {
           numbers[j + 1] = temp;
 
           generateBars();
-
+          highlightBar(j + 1);
           await delay();
         }
       }
     }
+  } else if (algorithm === "insertion") {
+    let key;
+
+    for (let i = 1; i < elements; i++) {
+      if (s) {
+        s--;
+        continue;
+      }
+      if (!playing) return;
+
+      key = numbers[i];
+      let j = i - 1;
+
+      while (key < numbers[j] && j >= 0) {
+        if (!playing) return;
+
+        numbers[j + 1] = numbers[j];
+        j--;
+
+        generateBars();
+        highlightBar(j + 1);
+
+        await delay();
+      }
+
+      numbers[j + 1] = key;
+
+      generateBars();
+      highlightBar(j + 1);
+      await delay();
+
+      step++;
+    }
   }
 
   stop();
-  end = true;
+  removeHighlight();
 }
 
 function delay() {
