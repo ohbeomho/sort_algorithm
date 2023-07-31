@@ -66,10 +66,6 @@ function highlightBar(i) {
   bars[i].classList.add("highlight");
 }
 
-function removeHighlight() {
-  bars.forEach((bar) => bar.classList.contains("highlight") && bar.classList.remove("highlight"));
-}
-
 function makeButton(type) {
   const button = document.createElement("button");
   button.innerText = type.charAt(0).toUpperCase() + type.substring(1);
@@ -78,12 +74,12 @@ function makeButton(type) {
     type === "play"
       ? play
       : type === "stop"
-      ? stop
-      : type === "resume"
-      ? resume
-      : type === "pause"
-      ? pause
-      : shuffle;
+        ? stop
+        : type === "resume"
+          ? resume
+          : type === "pause"
+            ? pause
+            : shuffle;
   button.addEventListener("click", event);
 
   buttons.appendChild(button);
@@ -152,7 +148,7 @@ async function sort() {
 
   if (algorithm === "selection") {
     for (let i = 0; i < elements; i++) {
-      for (let j = 0; j < elements; j++) {
+      for (let j = i + 1; j < elements; j++) {
         if (s) {
           s--;
           continue;
@@ -162,13 +158,13 @@ async function sort() {
 
         step++;
 
-        if (i === j) continue;
-        else if (numbers[i] < numbers[j]) {
+        if (numbers[i] > numbers[j]) {
           const temp = numbers[i];
           numbers[i] = numbers[j];
           numbers[j] = temp;
 
           generateBars();
+          highlightBar(i);
           highlightBar(j);
           await delay();
         }
@@ -192,6 +188,7 @@ async function sort() {
           numbers[j + 1] = temp;
 
           generateBars();
+          highlightBar(j);
           highlightBar(j + 1);
           await delay();
         }
@@ -217,14 +214,15 @@ async function sort() {
         j--;
 
         generateBars();
+        highlightBar(i);
         highlightBar(j + 1);
-
         await delay();
       }
 
       numbers[j + 1] = key;
 
       generateBars();
+      highlightBar(i);
       highlightBar(j + 1);
       await delay();
 
@@ -233,7 +231,7 @@ async function sort() {
   }
 
   stop();
-  removeHighlight();
+  generateBars();
 }
 
 function delay() {
